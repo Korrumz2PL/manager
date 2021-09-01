@@ -6,10 +6,16 @@ const { Routes } = require('discord-api-types/v9');
 const { MessageEmbed } = require("discord.js")
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-const commands = [{
-    name: "ping",
-    description: "Ping bota"
-}];
+const commands = [
+    {
+        name: "ping",
+        description: "Ping bota"
+    },
+    {
+        name: "help",
+        description: "Pomoc"
+    }
+]
 
 const clientId = "864950117869944853"
 const guildId = "804477558061137972"
@@ -36,6 +42,14 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.commandName === 'ping') {
         await interaction.reply(`\`${client.ws.ping}ms\``);
+    }
+    if (interaction.commandName === 'help') {
+        const embed = new MessageEmbed()
+            .setDescription("Pomoc\n\nLista komeend:\n\`ping\`, \`help\`")
+            .setColor("GREEN")
+        interaction.reply({
+            embeds: [embed]
+        })
     }
 });
 
