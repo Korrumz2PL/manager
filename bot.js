@@ -18,8 +18,11 @@ const partnership = new SlashCommandBuilder()
             option.setName("data").setDescription("Dane o serwerze (link z zaproszeniem, nazwa, liczba członków bez botów)").setRequired(true)
     )
 )
+const docs = new SlashCommandBuilder()
+    .setName("howto")
+    .setDescription("Jak złożyć wniosek?")
 
-const commands = [ping, partnership]
+const commands = [ping, partnership, docs]
 
 const clientId = "864950117869944853"
 const guildId = "804477558061137972"
@@ -59,6 +62,9 @@ client.on('interactionCreate', async interaction => {
                 .setColor("GREEN")
             interaction.reply({embeds: [embed]})
         }
+    }
+    if (interaction.commandName === "howto") {
+        interaction.reply({content: "Poczytaj o tym tutaj => https://docs.krivebot.xyz/partnership/"})
     }
 });
 
