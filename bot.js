@@ -4,18 +4,21 @@ const { Client, Intents } = require("discord.js")
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { MessageEmbed } = require("discord.js")
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-const commands = [
-    {
-        name: "ping",
-        description: "Ping bota"
-    },
-    {
-        name: "help",
-        description: "Pomoc"
-    }
-]
+const ping = new SlashCommandBuilder()
+    .setName("ping")
+    .setDescription("Ping bota")
+
+const partnership = new SlashCommandBuilder()
+    .setName("partnership")
+    .setDescription("Wyślij wniosek o partnerstwo")
+
+    partnership.addStringOption(option =>
+        option.setName("link").setDescription("zaproszenie do serwera").setRequired(true)
+    )
+const commands = [ping, partnership]
 
 const clientId = "864950117869944853"
 const guildId = "804477558061137972"
@@ -37,19 +40,22 @@ const rest = new REST({ version: '9' }).setToken(token);
     }
 })();
 
+
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
-    if (interaction.commandName === 'ping') {
-        await interaction.reply(`\`${client.ws.ping}ms\``);
+    if (interaction.commandName === "ping") {
+        interaction.reply({content: `Ping: \`${client.ws.ping}\``})
     }
-    if (interaction.commandName === 'help') {
-        const embed = new MessageEmbed()
-            .setDescription("Pomoc\n\nLista komeend:\n\`ping\`, \`help\`")
-            .setColor("GREEN")
-        interaction.reply({
-            embeds: [embed]
-        })
+    if (interaction.commandName === "partnership") {
+        if (interaction.options.getSubcommand() === "link") {
+            const test = interaction.options.getString("test2")
+
+            if (test) {
+               await interaction.reply({content: "działa"})
+            }
+
+        }
     }
 });
 
