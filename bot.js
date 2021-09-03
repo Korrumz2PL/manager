@@ -14,10 +14,11 @@ const ping = new SlashCommandBuilder()
 const partnership = new SlashCommandBuilder()
     .setName("partnership")
     .setDescription("Wyślij wniosek o partnerstwo")
-
-    partnership.addStringOption(option =>
-        option.setName("link").setDescription("zaproszenie do serwera").setRequired(true)
+    .addStringOption(option => (
+            option.setName("data").setDescription("Dane o serwerze (link z zaproszeniem, nazwa, liczba członków bez botów)").setRequired(true)
     )
+)
+
 const commands = [ping, partnership]
 
 const clientId = "864950117869944853"
@@ -48,18 +49,21 @@ client.on('interactionCreate', async interaction => {
         interaction.reply({content: `Ping: \`${client.ws.ping}\``})
     }
     if (interaction.commandName === "partnership") {
-        if (interaction.options.getSubcommand() === "link") {
-            const test = interaction.options.getString("test2")
+        if (interaction.options.getString("data")) {
+            const toRealize = interaction.options.getString("data")
 
-            if (test) {
-               await interaction.reply({content: "działa"})
-            }
+            client.channels.cache.get("883479817914294282").send(toRealize)
 
+            const embed = new MessageEmbed()
+                .setDescription("**Wysłano wniosek**\n\nWysłano wniosek pomyślnie do administracji!")
+                .setColor("GREEN")
+            interaction.reply({embeds: [embed]})
         }
     }
 });
 
 client.on("ready", () => {
     console.log("Ready")
+    client.user.setPresence({ activities: [{ name: "Gotowy do otrzymywania wniosków!" }] });
 })
 client.login(token)
