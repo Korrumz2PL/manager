@@ -93,6 +93,7 @@ client.on('interactionCreate', async interaction => {
             client.channels.cache.get("883727373500031088").send({
                 embeds: [embed3]
             })
+            interaction.reply({content: "Opublikowano partnerstwo."})
         }
     }
 });
