@@ -22,7 +22,19 @@ const docs = new SlashCommandBuilder()
     .setName("howto")
     .setDescription("Jak złożyć wniosek?")
 
-const commands = [ping, partnership, docs]
+const publish = new SlashCommandBuilder()
+    .setName("publish")
+    .setDescription("Opublikuj partnerstwo")
+    .addStringOption(option => (
+            option.setName("server_data").setDescription("Data o serwerze").setRequired(true)
+        )
+    )
+const commands = [
+    ping,
+    partnership,
+    docs,
+    publish
+]
 
 const clientId = "864950117869944853"
 const guildId = "804477558061137972"
@@ -65,6 +77,23 @@ client.on('interactionCreate', async interaction => {
     }
     if (interaction.commandName === "howto") {
         interaction.reply({content: "Poczytaj o tym tutaj => https://docs.krivebot.xyz/partnership/"})
+    }
+    if (interaction.commandName === "publish") {
+        if (interaction.options.getString("server_data")) {
+            const partnershipModerators = ["682572949219180547", "304979757852917762", "817883855310684180"]
+            if (partnershipModerators.hasOwnProperty(interaction.user.id)) return interaction.reply({content: "Ne możesz użyć tej komendy!"})
+
+            const partnership = interaction.options.getString("server_data")
+
+            const embed3 = new MessageEmbed()
+                .setDescription(`**Nowe partnerstwo**\n\n${partnership}`)
+                .setFooter(`Wywołane przez: ${interaction.user.tag}`)
+                .setTimestamp()
+                .setColor("GREEN")
+            client.channels.cache.get("883727373500031088").send({
+                embeds: [embed3]
+            })
+        }
     }
 });
 
